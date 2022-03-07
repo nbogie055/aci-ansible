@@ -1,0 +1,386 @@
+---
+
+#Registers New leaf
+- name: Register new leafs
+  hosts: apic
+  connection: local
+  gather_facts: false
+  vars_files:
+   - vars/register_leaf_vars.yml
+
+
+#Creates even odd leaf, geo location, oob, leaf profile, leaf interface profile and vpc protection group
+  tasks:
+    - name: Registers odd leaf
+      aci_fabric_node:
+        host: apic
+        username: username
+        password: password
+        serial: "{{ odd_sn }}"
+        node_id: "{{ odd_id }}"
+        switch: "{{ odd_name }}"
+        role: leaf
+        state: present
+        validate_certs: False
+      when: odd_id is not undefined
+
+    - name: Registers even leaf
+      aci_fabric_node:
+        host: apic
+        username: username
+        password: password
+        serial: "{{ even_sn }}"
+        node_id: "{{ even_id }}"
+        switch: "{{ even_name }}"
+        role: leaf
+        state: present
+        validate_certs: False
+      when: even_id is not undefined
+
+
+
+    - name: Create Rack for odd node
+      aci_rest:
+        host: apic
+        username: username
+        password: password
+        path: /api/node/mo/uni/fabric/site-default/building-default/floor-default/room-default/rack-{{ odd_rack }}.json
+        method: post
+        content:
+          {
+            "geoRack": {
+              "attributes": {
+                "dn": "uni/fabric/site-default/building-default/floor-default/room-default/rack-{{ odd_rack }}",
+                "name": "{{ odd_rack }}",
+                "rn": "rack-{{ odd_rack }}",
+                "status": "created"
+              },
+              "children": []
+            }
+          }
+        validate_certs: False
+      when: odd_id is not undefined
+
+    - name: Create Rack for even node
+      aci_rest:
+        host: apic
+        username: username
+        password: password
+        path: /api/node/mo/uni/fabric/site-default/building-default/floor-default/room-default/rack-{{ even_rack }}.json
+        method: post
+        content:
+          {
+            "geoRack": {
+              "attributes": {
+                "dn": "uni/fabric/site-default/building-default/floor-default/room-default/rack-{{ even_rack }}",
+                "name": "{{ even_rack }}",
+                "rn": "rack-{{ even_rack }}",
+                "status": "created"
+              },
+              "children": []
+            }
+          }
+        validate_certs: False
+      when: even_id is not undefined
+
+
+
+    - name: add Rack for odd node
+      aci_rest:
+        host: apic
+        username: username
+        password: password
+        path: /api/node/mo/uni/fabric/site-default/building-default/floor-default/room-default/rack-{{ odd_rack }}.json
+        method: post
+        content:
+          {
+            "geoRsNodeLocation": {
+              "attributes": {
+                "tDn": "topology/pod-1/node-{{ odd_id }}",
+                "status": "created,modified"
+              },
+              "children": []
+            }
+          }
+        validate_certs: False
+      when: odd_id is not undefined
+
+    - name: add Rack for even node
+      aci_rest:
+        host: apic
+        username: username
+        password: password
+        path: /api/node/mo/uni/fabric/site-default/building-default/floor-default/room-default/rack-{{ even_rack }}.json
+        method: post
+        content:
+          {
+            "geoRsNodeLocation": {
+              "attributes": {
+                "tDn": "topology/pod-1/node-{{ even_id }}",
+                "status": "created,modified"
+              },
+              "children": []
+            }
+          }
+        validate_certs: False
+      when: even_id is not undefined
+
+
+
+    - name: Add ipv4 address to out of band mgmt interface for odd node
+      aci_rest:
+        host: apic
+        username: username
+        password: password
+        path: /api/node/mo/uni/tn-mgmt/mgmtp-default/oob-default/rsooBStNode-[topology/pod-1/node-{{ odd_id }}].json
+        method: post
+        content:
+          {
+            "mgmtRsOoBStNode": {
+              "attributes": {
+                "tDn": "topology/pod-1/node-{{ odd_id }}",
+                "addr": "{{ odd_ip }}",
+                "gw": "{{ ip_gw }}",
+                "status": "created"
+              },
+              "children": []
+            }
+          }
+        validate_certs: False
+      when: odd_id is not undefined
+
+    - name: Add ipv4 address to out of band mgmt interface for even node
+      aci_rest:
+        host: apic
+        username: username
+        password: password
+        path: /api/node/mo/uni/tn-mgmt/mgmtp-default/oob-default/rsooBStNode-[topology/pod-1/node-{{ even_id }}].json
+        method: post
+        content:
+          {
+            "mgmtRsOoBStNode": {
+              "attributes": {
+                "tDn": "topology/pod-1/node-{{ even_id }}",
+                "addr": "{{ even_ip }}",
+                "gw": "{{ ip_gw }}",
+                "status": "created"
+              },
+              "children": []
+            }
+          }
+        validate_certs: False
+      when: even_id is not undefined
+
+  
+
+    - name: Add leaf profile for odd node
+      aci_switch_policy_leaf_profile:
+        host: apic
+        username: username
+        password: password
+        leaf_profile: Leaf_{{ odd_id }}
+        state: present
+        validate_certs: False
+      when:
+        - odd_id is not undefined 
+        - type == "standalone"
+
+    - name: Add leaf selector to leaf profile for odd node
+      aci_switch_leaf_selector:
+        host: apic
+        username: username
+        password: password
+        leaf_profile: Leaf_{{ odd_id }}
+        leaf: "{{ odd_name }}"
+        leaf_node_blk: "{{ odd_name }}"
+        from: "{{ odd_id }}"
+        to: "{{ odd_id }}"
+        state: present
+        validate_certs: False
+      when:
+        - odd_id is not undefined 
+        - type == "standalone"
+
+
+
+    - name: Add leaf profile for even node
+      aci_switch_policy_leaf_profile:
+        host: apic
+        username: username
+        password: password
+        leaf_profile: Leaf_{{ even_id }}
+        state: present
+        validate_certs: False
+      when:
+        - even_id is not undefined 
+        - type == "standalone"
+
+    - name: Add leaf selector to leaf profile for even node
+      aci_switch_leaf_selector:
+        host: apic
+        username: username
+        password: password
+        leaf_profile: Leaf_{{ even_id }}
+        leaf: "{{ even_name }}"
+        leaf_node_blk: "{{ even_name }}"
+        from: "{{ even_id }}"
+        to: "{{ even_id }}"
+        state: present
+        validate_certs: False
+      when:
+        - even_id is not undefined 
+        - type == "standalone"
+
+
+
+    - name: Add leaf profile for vpc nodes
+      aci_switch_policy_leaf_profile:
+        host: apic
+        username: username
+        password: password
+        leaf_profile: Leaf_{{ odd_id }}_{{ even_id }}
+        state: present
+        validate_certs: False
+      when: 
+        - odd_id is not undefined 
+        - even_id is not undefined 
+        - type == "VPC"
+
+    - name: Add leaf selector to leaf profile for odd node vpc
+      aci_switch_leaf_selector:
+        host: apic
+        username: username
+        password: password
+        leaf_profile: Leaf_{{ odd_id }}_{{ even_id }}
+        leaf: "{{ odd_name }}"
+        leaf_node_blk: "{{ odd_name }}"
+        from: "{{ odd_id }}"
+        to: "{{ odd_id }}"
+        state: present
+        validate_certs: False
+      when:
+        - odd_id is not undefined 
+        - even_id is not undefined 
+        - type == "VPC"
+
+    - name: Add leaf selector to leaf profile for even node vpc
+      aci_switch_leaf_selector:
+        host: apic
+        username: username
+        password: password
+        leaf_profile: Leaf_{{ odd_id }}_{{ even_id }}
+        leaf: "{{ even_name }}"
+        leaf_node_blk: "{{ even_name }}"
+        from: "{{ even_id }}"
+        to: "{{ even_id }}"
+        state: present
+        validate_certs: False
+      when:
+        - odd_id is not undefined 
+        - even_id is not undefined 
+        - type == "VPC"
+
+
+
+
+    - name: Add odd leaf interface profile
+      aci_interface_policy_leaf_profile:
+        host: apic
+        username: username
+        password: password
+        leaf_interface_profile: LEAF{{ odd_id }}_IntfProfile
+        state: present
+        validate_certs: False
+      when:
+        - odd_id is not undefined 
+        - type == "standalone"
+
+    - name: Add odd leaf interface profile to leaf profile
+      aci_interface_selector_to_switch_policy_leaf_profile:
+        host: apic
+        username: username
+        password: password
+        leaf_profile: Leaf_{{ odd_id }}
+        interface_selector: LEAF{{ odd_id }}_IntfProfile
+        state: present
+        validate_certs: False
+      when:
+        - odd_id is not undefined 
+        - type == "standalone"
+
+
+
+    - name: Add even leaf interface profile
+      aci_interface_policy_leaf_profile:
+        host: apic
+        username: username
+        password: password
+        leaf_interface_profile: LEAF{{ even_id }}_IntfProfile
+        state: present
+        validate_certs: False
+      when:
+        - even_id is not undefined 
+        - type == "standalone"
+
+    - name: Add even leaf interface profile to leaf profile
+      aci_interface_selector_to_switch_policy_leaf_profile:
+        host: apic
+        username: username
+        password: password
+        leaf_profile: Leaf_{{ even_id }}
+        interface_selector: LEAF{{ even_id }}_IntfProfile
+        state: present
+        validate_certs: False
+      when:
+        - even_id is not undefined 
+        - type == "standalone"
+
+
+
+    - name: Add vpc leaf interface profile
+      aci_interface_policy_leaf_profile:
+        host: apic
+        username: username
+        password: password
+        leaf_interface_profile: LEAF{{ odd_id }}_LEAF{{ even_id }}_IntfProfile
+        state: present
+        validate_certs: False
+      when:
+        - odd_id is not undefined 
+        - even_id is not undefined 
+        - type == "VPC"
+
+    - name: Add vpc leaf interface profile to leaf profile
+      aci_interface_selector_to_switch_policy_leaf_profile:
+        host: apic
+        username: username
+        password: password
+        leaf_profile: Leaf_{{ odd_id }}_{{ even_id }}
+        interface_selector: LEAF{{ odd_id }}_LEAF{{ even_id }}_IntfProfile
+        state: present
+        validate_certs: False
+      when:
+        - odd_id is not undefined 
+        - even_id is not undefined 
+        - type == "VPC"
+
+
+
+    - name: Add vpc leafs to protection group
+      aci_switch_policy_vpc_protection_group:
+        host: apic
+        username: username
+        password: password
+        protection_group: VPC_Group_{{ odd_id }}_{{ even_id }}
+        protection_group_id: "{{ odd_id }}"
+        switch_1_id: "{{ odd_id }}"
+        switch_2_id: "{{ even_id }}"
+        vpc_domain_policy: default
+        state: present
+        validate_certs: False
+      when:
+        - odd_id is not undefined 
+        - even_id is not undefined 
+        - type == "VPC"
+
+

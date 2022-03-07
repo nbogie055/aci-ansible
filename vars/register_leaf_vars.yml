@@ -1,0 +1,30 @@
+---
+#vars for register_leaf.yml
+
+#choose vpc or standalone
+type: 
+
+#enter odd node id
+odd_id:
+#enter odd node serial number
+odd_sn: 
+#enter odd node name
+odd_name: 
+#enter odd node rack location
+odd_rack:
+#enter odd node OOB address
+odd_ip:
+
+#enter even node id
+even_id:
+#enter even node serial number
+even_sn: 
+#enter even node name
+even_name: 
+#enter even node rack location
+even_rack:
+#enter even node OOB address
+even_ip:
+
+#enter oob gatewaye
+ip_gw:

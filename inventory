@@ -1,0 +1,7 @@
+[apic:vars]
+username=
+password=
+ansible_python_interpreter="/usr/bin/python"
+
+[apic]
+https://sandboxapicdc.cisco.com
