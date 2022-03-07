@@ -1,30 +1,34 @@
 ---
 #vars for register_leaf.yml
 
-#choose vpc or standalone
-type: 
+pair:
 
-#enter odd node id
-odd_id:
-#enter odd node serial number
-odd_sn: 
-#enter odd node name
-odd_name: 
-#enter odd node rack location
-odd_rack:
-#enter odd node OOB address
-odd_ip:
+#Copy and paste below format for each pair of leafs
 
-#enter even node id
-even_id:
-#enter even node serial number
-even_sn: 
-#enter even node name
-even_name: 
-#enter even node rack location
-even_rack:
-#enter even node OOB address
-even_ip:
+  #choose VPC or standalone
+  - type: VPC
+    #enter odd node id
+    odd_id: 101
+    #enter odd node serial number
+    odd_sn: sn101
+    #enter odd node name
+    odd_name: name101
+    #enter odd node rack location
+    odd_rack: 1
+    #enter odd node OOB address
+    odd_ip: 1.1.1.1/24
 
-#enter oob gatewaye
-ip_gw:
+    #enter even node id
+    even_id: 102
+    #enter even node serial number
+    even_sn: sn102
+    #enter even node name
+    even_name: name102
+    #enter even node rack location
+    even_rack: 2
+    #enter even node OOB address
+    even_ip: 1.1.1.2/24
+
+    #enter oob gatewaye
+    ip_gw: 1.1.1.5
+
