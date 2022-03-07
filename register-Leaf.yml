@@ -13,9 +13,9 @@
   tasks:
     - name: Registers odd leaf
       aci_fabric_node:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         serial: "{{ odd_sn }}"
         node_id: "{{ odd_id }}"
         switch: "{{ odd_name }}"
@@ -26,9 +26,9 @@
 
     - name: Registers even leaf
       aci_fabric_node:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         serial: "{{ even_sn }}"
         node_id: "{{ even_id }}"
         switch: "{{ even_name }}"
@@ -41,9 +41,9 @@
 
     - name: Create Rack for odd node
       aci_rest:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         path: /api/node/mo/uni/fabric/site-default/building-default/floor-default/room-default/rack-{{ odd_rack }}.json
         method: post
         content:
@@ -63,9 +63,9 @@
 
     - name: Create Rack for even node
       aci_rest:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         path: /api/node/mo/uni/fabric/site-default/building-default/floor-default/room-default/rack-{{ even_rack }}.json
         method: post
         content:
@@ -87,9 +87,9 @@
 
     - name: add Rack for odd node
       aci_rest:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         path: /api/node/mo/uni/fabric/site-default/building-default/floor-default/room-default/rack-{{ odd_rack }}.json
         method: post
         content:
@@ -107,9 +107,9 @@
 
     - name: add Rack for even node
       aci_rest:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         path: /api/node/mo/uni/fabric/site-default/building-default/floor-default/room-default/rack-{{ even_rack }}.json
         method: post
         content:
@@ -129,9 +129,9 @@
 
     - name: Add ipv4 address to out of band mgmt interface for odd node
       aci_rest:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         path: /api/node/mo/uni/tn-mgmt/mgmtp-default/oob-default/rsooBStNode-[topology/pod-1/node-{{ odd_id }}].json
         method: post
         content:
@@ -151,9 +151,9 @@
 
     - name: Add ipv4 address to out of band mgmt interface for even node
       aci_rest:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         path: /api/node/mo/uni/tn-mgmt/mgmtp-default/oob-default/rsooBStNode-[topology/pod-1/node-{{ even_id }}].json
         method: post
         content:
@@ -175,9 +175,9 @@
 
     - name: Add leaf profile for odd node
       aci_switch_policy_leaf_profile:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         leaf_profile: Leaf_{{ odd_id }}
         state: present
         validate_certs: False
@@ -187,9 +187,9 @@
 
     - name: Add leaf selector to leaf profile for odd node
       aci_switch_leaf_selector:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         leaf_profile: Leaf_{{ odd_id }}
         leaf: "{{ odd_name }}"
         leaf_node_blk: "{{ odd_name }}"
@@ -205,9 +205,9 @@
 
     - name: Add leaf profile for even node
       aci_switch_policy_leaf_profile:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         leaf_profile: Leaf_{{ even_id }}
         state: present
         validate_certs: False
@@ -217,9 +217,9 @@
 
     - name: Add leaf selector to leaf profile for even node
       aci_switch_leaf_selector:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         leaf_profile: Leaf_{{ even_id }}
         leaf: "{{ even_name }}"
         leaf_node_blk: "{{ even_name }}"
@@ -235,9 +235,9 @@
 
     - name: Add leaf profile for vpc nodes
       aci_switch_policy_leaf_profile:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         leaf_profile: Leaf_{{ odd_id }}_{{ even_id }}
         state: present
         validate_certs: False
@@ -248,9 +248,9 @@
 
     - name: Add leaf selector to leaf profile for odd node vpc
       aci_switch_leaf_selector:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         leaf_profile: Leaf_{{ odd_id }}_{{ even_id }}
         leaf: "{{ odd_name }}"
         leaf_node_blk: "{{ odd_name }}"
@@ -265,9 +265,9 @@
 
     - name: Add leaf selector to leaf profile for even node vpc
       aci_switch_leaf_selector:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         leaf_profile: Leaf_{{ odd_id }}_{{ even_id }}
         leaf: "{{ even_name }}"
         leaf_node_blk: "{{ even_name }}"
@@ -285,9 +285,9 @@
 
     - name: Add odd leaf interface profile
       aci_interface_policy_leaf_profile:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         leaf_interface_profile: LEAF{{ odd_id }}_IntfProfile
         state: present
         validate_certs: False
@@ -297,9 +297,9 @@
 
     - name: Add odd leaf interface profile to leaf profile
       aci_interface_selector_to_switch_policy_leaf_profile:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         leaf_profile: Leaf_{{ odd_id }}
         interface_selector: LEAF{{ odd_id }}_IntfProfile
         state: present
@@ -312,9 +312,9 @@
 
     - name: Add even leaf interface profile
       aci_interface_policy_leaf_profile:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         leaf_interface_profile: LEAF{{ even_id }}_IntfProfile
         state: present
         validate_certs: False
@@ -324,9 +324,9 @@
 
     - name: Add even leaf interface profile to leaf profile
       aci_interface_selector_to_switch_policy_leaf_profile:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         leaf_profile: Leaf_{{ even_id }}
         interface_selector: LEAF{{ even_id }}_IntfProfile
         state: present
@@ -339,9 +339,9 @@
 
     - name: Add vpc leaf interface profile
       aci_interface_policy_leaf_profile:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         leaf_interface_profile: LEAF{{ odd_id }}_LEAF{{ even_id }}_IntfProfile
         state: present
         validate_certs: False
@@ -352,9 +352,9 @@
 
     - name: Add vpc leaf interface profile to leaf profile
       aci_interface_selector_to_switch_policy_leaf_profile:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         leaf_profile: Leaf_{{ odd_id }}_{{ even_id }}
         interface_selector: LEAF{{ odd_id }}_LEAF{{ even_id }}_IntfProfile
         state: present
@@ -368,9 +368,9 @@
 
     - name: Add vpc leafs to protection group
       aci_switch_policy_vpc_protection_group:
-        host: apic
-        username: username
-        password: password
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
         protection_group: VPC_Group_{{ odd_id }}_{{ even_id }}
         protection_group_id: "{{ odd_id }}"
         switch_1_id: "{{ odd_id }}"
