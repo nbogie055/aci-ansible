@@ -1,12 +1,15 @@
 ---
 #vars for register_leaf.yml
 
+#If only registering 1 leaf node. Leaf either EVEN or ODD variables empty (example: even_id: )
+
 pair:
 
 #Copy and paste below format for each pair of leafs
 
   #choose VPC or standalone
   - type: VPC
+  
     #enter odd node id
     odd_id: 101
     #enter odd node serial number
