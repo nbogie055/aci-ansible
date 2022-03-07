@@ -8,7 +8,8 @@ ansible-playbook register_leaf.yml -i inventory
 Inventory file: contains credentials and hosts
 vars files: contains variables the playbooks will use
 
-- register_leaf.yml
+-register_leaf.yml
 
-1. Modify register_leaf_vars.yml with your data
-2. If registering more than 2 leafs. Start a new pair with -type:  
+This playbook will register 2 leafs (either vpc or standalone), add rack location, OOB addresses, leaf profile, leaf inetrface profile and VPC protection group (if VPC peer).
+
+Modify register_leaf_vars.yml with your data. If registering more than 2 leafs. Start a new pair with -type:  
