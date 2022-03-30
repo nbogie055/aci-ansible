@@ -2,10 +2,11 @@
 #vars for register_leaf.yml
 
 #If only registering 1 leaf node. Leave either EVEN or ODD variables empty (example: even_id: )
+#Leave rack and OOB variables empty if you dont wish to add those
 
 pair:
 
-#Copy and paste below format for each pair of leafs
+#Copy and paste format below for each pair of leafs
 
   #choose VPC or standalone
   - type: VPC
@@ -32,6 +33,6 @@ pair:
     #enter even node OOB address
     even_ip: 1.1.1.2/24
 
-    #enter oob gatewaye
+    #enter oob gateway
     ip_gw: 1.1.1.5
 

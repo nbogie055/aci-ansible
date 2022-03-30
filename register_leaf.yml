@@ -8,7 +8,6 @@
   vars_files:
    - vars/register_leaf_vars.yml
 
-
 #Creates even odd leaf, geo location, oob, leaf profile, leaf interface profile and vpc protection group
   tasks:
     - name: Registers odd leaf
@@ -22,7 +21,10 @@
         role: leaf
         state: present
         validate_certs: False
-      when: item['odd_id'] is not undefined
+      when: 
+        - item['odd_id'] != None
+        - item['odd_sn'] != None
+        - item['odd_name'] != None
       with_items: "{{ pair }}"
 
     - name: Registers even leaf
@@ -36,7 +38,10 @@
         role: leaf
         state: present
         validate_certs: False
-      when: item['even_id'] is not undefined
+      when:
+        - item['even_id'] != None
+        - item['even_sn'] != None
+        - item['even_name'] != None
       with_items: "{{ pair }}"
 
 
@@ -61,7 +66,9 @@
             }
           }
         validate_certs: False
-      when: item['odd_id'] is not undefined
+      when:
+        - item['odd_id'] != None
+        - item['odd_rack'] != None
       with_items: "{{ pair }}"
 
     - name: Create Rack for even node
@@ -84,7 +91,9 @@
             }
           }
         validate_certs: False
-      when: item['even_id'] is not undefined
+      when:
+        - item['even_id'] != None
+        - item['even_rack'] != None
       with_items: "{{ pair }}"
 
 
@@ -107,7 +116,9 @@
             }
           }
         validate_certs: False
-      when: item['odd_id'] is not undefined
+      when:
+        - item['odd_id'] != None
+        - item['odd_rack'] != None
       with_items: "{{ pair }}"
 
     - name: add Rack for even node
@@ -128,7 +139,9 @@
             }
           }
         validate_certs: False
-      when: item['even_id'] is not undefined
+      when:
+        - item['even_id'] != None
+        - item['even_rack'] != None
       with_items: "{{ pair }}"
 
 
@@ -153,7 +166,10 @@
             }
           }
         validate_certs: False
-      when: item['odd_id'] is not undefined
+      when:
+        - item['odd_id'] != None
+        - item['odd_ip'] != None
+        - item['ip_gw'] != None
       with_items: "{{ pair }}"
 
     - name: Add ipv4 address to out of band mgmt interface for even node
@@ -176,7 +192,10 @@
             }
           }
         validate_certs: False
-      when: item['even_id'] is not undefined
+      when:
+        - item['even_id'] != None
+        - item['even_ip'] != None
+        - item['ip_gw'] != None
       with_items: "{{ pair }}"
 
   
@@ -190,7 +209,7 @@
         state: present
         validate_certs: False
       when:
-        - item['odd_id'] is not undefined
+        - item['odd_id'] != None
         - item['type'] == "standalone"
       with_items: "{{ pair }}"
 
@@ -207,7 +226,8 @@
         state: present
         validate_certs: False
       when:
-        - item['odd_id'] is not undefined
+        - item['odd_name'] != None
+        - item['odd_id'] != None
         - item['type'] == "standalone"
       with_items: "{{ pair }}"
 
@@ -222,7 +242,7 @@
         state: present
         validate_certs: False
       when:
-        - item['even_id'] is not undefined
+        - item['even_id'] != None
         - item['type'] == "standalone"
       with_items: "{{ pair }}"
 
@@ -239,7 +259,8 @@
         state: present
         validate_certs: False
       when:
-        - item['even_id'] is not undefined
+        - item['even_name'] != None
+        - item['even_id'] != None
         - item['type'] == "standalone"
       with_items: "{{ pair }}"
 
@@ -254,8 +275,8 @@
         state: present
         validate_certs: False
       when: 
-        - item['odd_id'] is not undefined 
-        - item['even_id'] is not undefined 
+        - item['odd_id'] != None
+        - item['even_id'] != None
         - item['type'] == "VPC"
       with_items: "{{ pair }}"
 
@@ -272,8 +293,9 @@
         state: present
         validate_certs: False
       when:
-        - item['odd_id'] is not undefined 
-        - item['even_id'] is not undefined 
+        - item['odd_name'] != None 
+        - item['odd_id'] != None
+        - item['even_id'] != None
         - item['type'] == "VPC"
       with_items: "{{ pair }}"
 
@@ -290,8 +312,9 @@
         state: present
         validate_certs: False
       when:
-        - item['odd_id'] is not undefined 
-        - item['even_id'] is not undefined 
+        - item['even_name'] != None
+        - item['odd_id'] != None
+        - item['even_id'] != None
         - item['type'] == "VPC"
       with_items: "{{ pair }}"
 
@@ -307,7 +330,7 @@
         state: present
         validate_certs: False
       when:
-        - item['odd_id'] is not undefined 
+        - item['odd_id'] != None
         - item['type'] == "standalone"
       with_items: "{{ pair }}"
 
@@ -321,7 +344,7 @@
         state: present
         validate_certs: False
       when:
-        - item['odd_id'] is not undefined 
+        - item['odd_id'] != None 
         - item['type'] == "standalone"
       with_items: "{{ pair }}"
 
@@ -336,7 +359,7 @@
         state: present
         validate_certs: False
       when:
-        - item['even_id'] is not undefined 
+        - item['even_id'] != None
         - item['type'] == "standalone"
       with_items: "{{ pair }}"
 
@@ -350,7 +373,7 @@
         state: present
         validate_certs: False
       when:
-        - item['even_id'] is not undefined 
+        - item['even_id'] != None
         - item['type'] == "standalone"
       with_items: "{{ pair }}"
 
@@ -365,8 +388,8 @@
         state: present
         validate_certs: False
       when:
-        - item['odd_id'] is not undefined 
-        - item['even_id'] is not undefined 
+        - item['odd_id'] != None
+        - item['even_id'] != None
         - item['type'] == "VPC"
       with_items: "{{ pair }}"
 
@@ -380,8 +403,8 @@
         state: present
         validate_certs: False
       when:
-        - item['odd_id'] is not undefined 
-        - item['even_id'] is not undefined 
+        - item['odd_id'] != None 
+        - item['even_id'] != None 
         - item['type'] == "VPC"
       with_items: "{{ pair }}"
 
@@ -400,7 +423,7 @@
         state: present
         validate_certs: False
       when:
-        - item['odd_id'] is not undefined 
-        - item['even_id'] is not undefined 
+        - item['odd_id'] != None
+        - item['even_id'] != None 
         - item['type'] == "VPC"
       with_items: "{{ pair }}"
