@@ -6,6 +6,7 @@ To run any of the playbooks:
 ansible-playbook register_leaf.yml -i inventory
 
 Inventory file: contains credentials and hosts
+
 vars files: contains variables the playbooks will use
 
 -register_leaf.yml
